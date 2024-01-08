@@ -1,6 +1,6 @@
 import os
 import argparse
-import argparse_range
+import numpy as np
 from argparse_range import range_action
 
 msg="Please specify the following  grid size for game of life \n"
@@ -12,3 +12,21 @@ args=vars(parser.parse_args())
 grid=args['grid']
 prob=args['probability']
 
+# create a array of size grid
+
+garray=np.zeros(grid)
+total_ones=int(prob*(grid[0]*grid[1]))
+print(total_ones)
+
+x=np.random.randint( 0,high=garray.shape[0]+1,size=total_ones*2)
+y=np.random.randint( 0,high=garray.shape[1]+1,size=total_ones*2,)
+# Assign 1s randomly to the grid
+
+print([x,y])
+
+coord = set(tuple(zip(x, y)))
+
+if(coord < total_ones):
+    
+
+print(len(set(coord)))
