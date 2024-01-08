@@ -18,15 +18,60 @@ garray=np.zeros(grid)
 total_ones=int(prob*(grid[0]*grid[1]))
 print(total_ones)
 
-x=np.random.randint( 0,high=garray.shape[0]+1,size=total_ones*2)
-y=np.random.randint( 0,high=garray.shape[1]+1,size=total_ones*2,)
+x=np.random.randint( 0,high=garray.shape[0],size=total_ones*5)
+y=np.random.randint( 0,high=garray.shape[1],size=total_ones*5)
 # Assign 1s randomly to the grid
 
 print([x,y])
 
-coord = set(tuple(zip(x, y)))
+coord = list(set(tuple(zip(x, y))))
 
-if(coord < total_ones):
+
+if(len(coord) < total_ones):
+    print("Error, not enough unique ")
+    exit(1)
+
+print(len(coord))
+
+coord=coord[0:total_ones]
+
+for x,y in coord:
+    print(x,y)
+    garray[x,y]=1
+
+print(garray.shape)
+
+
+def isValid(np_shape: tuple, index: tuple):
+    if min(index) < 0:
+        return False
+    for ind,sh in zip(index,np_shape):
+        if ind >= sh:
+            return False
+    return True
+
+for i in range(grid[0]):
+ for j in range(grid[1]):
+   print(i,j)
+   x_p=i+1
+   x_m=i-1
+   y_p=j+1
+   y_m=j-1
+   print(x_p,j)
+   if(isValid(garray.shape,(x+1,j))):
+      print("yay")
+      
+   else:
+      print("nay")
+
+
+
+   #check how many neighbors are 1s 
     
+   #check how many neighbors are 0s
 
-print(len(set(coord)))
+print(range(grid[0]))
+print(grid[0])
+print(garray.shape)
+
+
