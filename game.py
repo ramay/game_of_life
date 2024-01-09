@@ -15,6 +15,7 @@ prob=args['probability']
 # create a array of size grid
 
 garray=np.zeros(grid)
+print(grid[0],grid[1],prob)
 total_ones=int(prob*(grid[0]*grid[1]))
 print(total_ones)
 
@@ -39,10 +40,12 @@ for x,y in coord:
     print(x,y)
     garray[x,y]=1
 
-print(garray.shape)
+print("Initial Garry")
+print(garray)
 
 
 def isValid(np_shape: tuple, index: tuple):
+    #print(index,"**",np_shape)
     if min(index) < 0:
         return False
     for ind,sh in zip(index,np_shape):
@@ -50,28 +53,41 @@ def isValid(np_shape: tuple, index: tuple):
             return False
     return True
 
-for i in range(grid[0]):
- for j in range(grid[1]):
-   print(i,j)
-   x_p=i+1
-   x_m=i-1
-   y_p=j+1
-   y_m=j-1
-   print(x_p,j)
-   if(isValid(garray.shape,(x+1,j))):
-      print("yay")
-      
-   else:
-      print("nay")
+x=0
+while(x <100):
+    for i in range(grid[0]):
+        for j in range(grid[1]):
+           # print("IJ",i,j)
+            neibs=0
+            if(isValid(garray.shape,(i+1,j))):
+                neibs+= garray[i+1][j]
+            if(isValid(garray.shape,(i-1,j))):
+                neibs+= garray[i-1][j]
+            if(isValid(garray.shape,(i,j+1))):
+                neibs+= garray[i][j+1]
+            if(isValid(garray.shape,(i,j-1))):
+                neibs+= garray[i][j-1]
 
-
-
+            #   print("My neibs are",neibs)
+            
+            if(garray[i][j]==1):
+                    if(neibs < 2 ):
+                        garray[i][j]=0
+                    elif((neibs > 2) & (neibs <=3)):
+                        garray[i][j]=1
+                    elif(neibs > 3):
+                        garray[i][j]=0
+            if((garray[i][j]==0) & (neibs==3)):
+                    garray[i,j]=1    
+    x+=1
+    print(garray)
    #check how many neighbors are 1s 
     
    #check how many neighbors are 0s
 
-print(range(grid[0]))
-print(grid[0])
-print(garray.shape)
+
+#print(range(grid[0]))
+#print(grid[0])
+#print(garray.shape)
 
 
