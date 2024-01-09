@@ -5,6 +5,54 @@ from argparse_range import range_action
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+
+# This function checks if the index exists in an array
+def isValid(np_shape: tuple, index: tuple):
+    #print(index,"**",np_shape)
+    if min(index) < 0:
+        return False
+    for ind,sh in zip(index,np_shape):
+        if ind >= sh:
+            return False
+    return True
+
+# This function updates each cell based on it's neighbors
+def change_garray(garray,grid):
+    for i in range(grid[0]):
+        for j in range(grid[1]):
+            neibs=0
+            if(isValid(garray.shape,(i+1,j))):
+                neibs+= garray[i+1][j]
+            if(isValid(garray.shape,(i-1,j))):
+                neibs+= garray[i-1][j]
+            if(isValid(garray.shape,(i,j+1))):
+                neibs+= garray[i][j+1]
+            if(isValid(garray.shape,(i,j-1))):
+                neibs+= garray[i][j-1]
+            if(isValid(garray.shape,(i+1,j+1))):
+                neibs+= garray[i+1][j+1]
+            if(isValid(garray.shape,(i-1,j-1))):
+                neibs+= garray[i-1][j-1]
+            if(isValid(garray.shape,(i-1,j+1))):
+                neibs+= garray[i-1][j+1]
+            if(isValid(garray.shape,(i+1,j-1))):
+                neibs+= garray[i+1][j-1]
+            #   print("My neibs are",neibs)
+            
+            if(garray[i][j]==1):
+                    if(neibs < 2 ):
+                        garray[i][j]=0
+                    elif((neibs > 2) & (neibs <=3)):
+                        garray[i][j]=1
+                    elif(neibs > 3):
+                        garray[i][j]=0
+            if((garray[i][j]==0) & (neibs==3)):
+                    garray[i,j]=1    
+    return(garray)
+
+
+
+
 msg="Please specify the following  grid size for game of life \n"
 parser=argparse.ArgumentParser(description=msg)
 parser.add_argument("--grid", nargs=2, type=int, help="provide two integers with a space to define the grid x y")
@@ -46,48 +94,8 @@ print("Initial Garry")
 print(garray)
 
 
-def isValid(np_shape: tuple, index: tuple):
-    #print(index,"**",np_shape)
-    if min(index) < 0:
-        return False
-    for ind,sh in zip(index,np_shape):
-        if ind >= sh:
-            return False
-    return True
 
-def change_garray(garray,grid):
-    for i in range(grid[0]):
-        for j in range(grid[1]):
-           # print("IJ",i,j)
-            neibs=0
-            if(isValid(garray.shape,(i+1,j))):
-                neibs+= garray[i+1][j]
-            if(isValid(garray.shape,(i-1,j))):
-                neibs+= garray[i-1][j]
-            if(isValid(garray.shape,(i,j+1))):
-                neibs+= garray[i][j+1]
-            if(isValid(garray.shape,(i,j-1))):
-                neibs+= garray[i][j-1]
-            if(isValid(garray.shape,(i+1,j+1))):
-                neibs+= garray[i+1][j+1]
-            if(isValid(garray.shape,(i-1,j-1))):
-                neibs+= garray[i-1][j-1]
-            if(isValid(garray.shape,(i-1,j+1))):
-                neibs+= garray[i-1][j+1]
-            if(isValid(garray.shape,(i+1,j-1))):
-                neibs+= garray[i+1][j-1]
-            #   print("My neibs are",neibs)
-            
-            if(garray[i][j]==1):
-                    if(neibs < 2 ):
-                        garray[i][j]=0
-                    elif((neibs > 2) & (neibs <=3)):
-                        garray[i][j]=1
-                    elif(neibs > 3):
-                        garray[i][j]=0
-            if((garray[i][j]==0) & (neibs==3)):
-                    garray[i,j]=1    
-    return(garray)
+
 
 def update(frame,matrix,grid):
     # Update the matrix with new random values
@@ -103,20 +111,14 @@ def update(frame,matrix,grid):
 #print("dfsd",change_garray(garray,grid))
 fig, ax = plt.subplots()
 mat = ax.matshow(garray, cmap='viridis')
-print(mat)
-print("Test")
+#print(mat)
+#print("Test")
 #plt.colorbar(mat)
-ani = animation.FuncAnimation(fig, update,fargs=(garray,grid),frames=500,blit=False)
-plt.show()
+ani = animation.FuncAnimation(fig, update,fargs=(garray,grid),frames=10)
+#plt.show()
 
-ani.save('animation.mp4')
-   #check how many neighbors are 1s 
-    
-   #check how many neighbors are 0s
+writergif = animation.PillowWriter(fps=10)
+ani.save('filename.gif',writer=writergif)
 
-
-#print(range(grid[0]))
-#print(grid[0])
-#print(garray.shape)
 
 
