@@ -2,6 +2,8 @@ import os
 import argparse
 import numpy as np
 from argparse_range import range_action
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 msg="Please specify the following  grid size for game of life \n"
 parser=argparse.ArgumentParser(description=msg)
@@ -53,8 +55,7 @@ def isValid(np_shape: tuple, index: tuple):
             return False
     return True
 
-x=0
-while(x <100):
+def change_garray(garray,grid):
     for i in range(grid[0]):
         for j in range(grid[1]):
            # print("IJ",i,j)
@@ -67,7 +68,14 @@ while(x <100):
                 neibs+= garray[i][j+1]
             if(isValid(garray.shape,(i,j-1))):
                 neibs+= garray[i][j-1]
-
+            if(isValid(garray.shape,(i+1,j+1))):
+                neibs+= garray[i+1][j+1]
+            if(isValid(garray.shape,(i-1,j-1))):
+                neibs+= garray[i-1][j-1]
+            if(isValid(garray.shape,(i-1,j+1))):
+                neibs+= garray[i-1][j+1]
+            if(isValid(garray.shape,(i+1,j-1))):
+                neibs+= garray[i+1][j-1]
             #   print("My neibs are",neibs)
             
             if(garray[i][j]==1):
@@ -79,8 +87,29 @@ while(x <100):
                         garray[i][j]=0
             if((garray[i][j]==0) & (neibs==3)):
                     garray[i,j]=1    
-    x+=1
-    print(garray)
+    return(garray)
+
+def update(frame,matrix,grid):
+    # Update the matrix with new random values
+    print("grid",grid)
+    matrix = change_garray(matrix,grid)
+    print("Matrix***",matrix)
+    # Update the data in the matshow plot
+    mat.set_array(matrix)
+    return matrix
+     
+#    x+=1
+#    print(garray)
+#print("dfsd",change_garray(garray,grid))
+fig, ax = plt.subplots()
+mat = ax.matshow(garray, cmap='viridis')
+print(mat)
+print("Test")
+#plt.colorbar(mat)
+ani = animation.FuncAnimation(fig, update,fargs=(garray,grid),frames=500,blit=False)
+plt.show()
+
+ani.save('animation.mp4')
    #check how many neighbors are 1s 
     
    #check how many neighbors are 0s
